@@ -33,12 +33,12 @@ class Search extends Component
         ->registerModel(Serie::class, 'name')
         ->registerModel(Season::class, 'name')
         ->registerModel(Cast::class, 'name')
-        ->registerModel(Episode::class, 'name')
+        ->registerModel(Episode::class, 'name')    
         ->search($this->search);
     }
     public function render()
     {
-
+        
         return view('livewire.search');
     }
 }

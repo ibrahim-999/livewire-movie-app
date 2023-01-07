@@ -54,7 +54,7 @@ class SeasonIndex extends Component
                 ]);
                 $this->reset('seasonNumber');
                 $this->dispatchBrowserEvent('banner-message', ['style' => 'success', 'message' => 'Season created']);
-
+           
         } else {
             $this->dispatchBrowserEvent('banner-message', ['style' => 'danger', 'message' => 'Api not exists']);
             $this->reset('seasonNumber');

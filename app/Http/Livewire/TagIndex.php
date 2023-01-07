@@ -19,6 +19,10 @@ class TagIndex extends Component
 
     public function showCreateModal()
     {
+        $tagId = NULL;
+        $this->tagId = $tagId;
+        $tagName = NULL;
+        $this->tagName = $tagName;
         $this->showTagModal = true;
     }
 
@@ -32,7 +36,7 @@ class TagIndex extends Component
         $this->dispatchBrowserEvent('banner-message', ['style' => 'success', 'message' => 'Tag created successfully']);
     }
 
-    
+
 
     public function showEditModal($tagId)
     {
@@ -42,7 +46,7 @@ class TagIndex extends Component
         $this->tagName = $tag->tag_name;
         $this->showTagModal = true;
     }
-    
+
     public function updateTag()
     {
         $tag = Tag::findOrFail($this->tagId);
@@ -72,7 +76,7 @@ class TagIndex extends Component
     {
         $this->reset();
     }
-    
+
     public function render()
     {
         return view('livewire.tag-index', [
