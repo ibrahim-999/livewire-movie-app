@@ -4,7 +4,7 @@
 
 webapp allows to generate movies series and season using themoviedb.org apis with jetstream auth.
 
-> This project could be extended in the future to CRUD user from the admin panel. This is just complete the tech task.
+> This project could be extended in the future to CRUD user from the admin panel. This is just to mimic the backend task.
 
 ## Prerequisite
 - PHP 8
