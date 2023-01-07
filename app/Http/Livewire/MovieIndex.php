@@ -60,6 +60,45 @@ class MovieIndex extends Component
 
     // generate movie
 
+    public function generateMovie()
+    {
+        $movie = Movie::where('tmdb_id', $this->tmdbId)->exists();
+        if ($movie) {
+            $this->dispatchBrowserEvent('banner-message', ['style' => 'danger', 'message' => 'Movie exists']);
+            return;
+        }
+        $url = 'https://api.themoviedb.org/3/movie/'. $this->tmdbId .'?api_key=8a11aac3fb4ef5f1f9607ee7e0329793&language=en-US';
+
+        $apiMovie = Http::get($url);
+
+        if ($apiMovie->successful()) {
+            $newMovie = $apiMovie->json();
+
+            $created_movie = Movie::create([
+                'tmdb_id' => $newMovie['id'],
+                'title' => $newMovie['title'],
+                'slug'  => Str::slug($newMovie['title']),
+                'runtime' => $newMovie['runtime'],
+                'rating' => $newMovie['vote_average'],
+                'release_date' => $newMovie['release_date'],
+                'lang' => $newMovie['original_language'],
+                'video_format' => 'HD',
+                'is_public' => false,
+                'overview' => $newMovie['overview'],
+                'poster_path' => $newMovie['poster_path'],
+                'backdrop_path' => $newMovie['backdrop_path']
+            ]);
+            $tmdb_genres = $newMovie['genres'];
+            $tmdb_genres_ids = collect($tmdb_genres)->pluck('id');
+            $genres = Genre::whereIn('tmdb_id', $tmdb_genres_ids)->get();
+            $created_movie->genres()->attach($genres);
+            $this->reset('tmdbId');
+            $this->dispatchBrowserEvent('banner-message', ['style' => 'success', 'message' => 'Movie created']);
+        } else {
+            $this->dispatchBrowserEvent('banner-message', ['style' => 'danger', 'message' => 'Api not exists']);
+            $this->reset('tmdbId');
+        }
+    }
 
     public function sortByColumn($column)
     {

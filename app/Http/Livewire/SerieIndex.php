@@ -29,6 +29,25 @@ class SerieIndex extends Component
         'createdYear' => 'required'
     ];
 
+    public function generateSerie()
+    {
+        $newSerie = Http::get('https://api.themoviedb.org/3/tv/'. $this->tmdbId .'?api_key=8a11aac3fb4ef5f1f9607ee7e0329793&language=en-US
+                    ')->json();
+        $serie = Serie::where('tmdb_id', $newSerie['id'])->first();
+        if (!$serie) {
+            Serie::create([
+            'tmdb_id' => $newSerie['id'],
+            'name'    => $newSerie['name'],
+            'slug'    => Str::slug($newSerie['name']),
+            'created_year' => $newSerie['first_air_date'],
+            'poster_path'  => $newSerie['poster_path']
+        ]);
+            $this->reset();
+            $this->dispatchBrowserEvent('banner-message', ['style' => 'success', 'message' => 'Serie created']);
+        } else {
+            $this->dispatchBrowserEvent('banner-message', ['style' => 'danger', 'message' => 'Serie exists']);
+        }
+    }
 
     public function showEditModal($id)
     {

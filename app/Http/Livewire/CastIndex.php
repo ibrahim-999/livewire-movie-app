@@ -28,6 +28,23 @@ class CastIndex extends Component
         'castPosterPath' => 'required'
     ];
 
+    public function generateCast()
+    {
+        $newCast = Http::get('https://api.themoviedb.org/3/person/'. $this->castTMDBId .'?api_key=8a11aac3fb4ef5f1f9607ee7e0329793&language=en-US
+                        ')->json();
+
+        $cast = Cast::where('tmdb_id', $newCast['id'])->first();
+        if (!$cast) {
+            Cast::create([
+        'tmdb_id' => $newCast['id'],
+        'name'    => $newCast['name'],
+        'slug'    => Str::slug($newCast['name']),
+        'poster_path' => $newCast['profile_path']
+    ]);
+        } else {
+            $this->dispatchBrowserEvent('banner-message', ['style' => 'danger', 'message' => 'Cast exisit']);
+        }
+    }
 
     public function showEditModal($id)
     {
